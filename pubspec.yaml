@@ -39,6 +39,7 @@ dependencies:
   redux_saga: ^3.0.5
   math_expressions: ^2.2.0
   google_fonts: ^2.1.0
+  complex: ^0.7.2
 
 dev_dependencies:
   flutter_test:

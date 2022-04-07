@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
+import 'package:test_drive/pages/loyalty.dart';
+import 'package:test_drive/pages/mandelbrot.dart';
+import 'package:test_drive/pages/synth.dart';
 import '/actions/counter.dart';
 import '/actions/page.dart';
 import '/actions/theme.dart';
@@ -14,6 +17,13 @@ class RootPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const views = <Widget>[
+      MandelbrotPage(),
+      SynthPage(),
+      LoyaltyPage(),
+      CalculatorPage(),
+      CounterPage(),
+    ];
     return StoreConnector<AppState, _ViewModel>(
         converter: _ViewModel.fromStore,
         builder: (context, vm) => Scaffold(
@@ -28,24 +38,40 @@ class RootPage extends StatelessWidget {
                   ),
                 ],
               ),
-              body: IndexedStack(
-                index: vm.index,
-                children: const [
-                  CounterPage(),
-                  CalculatorPage(),
-                ],
+              body: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 250),
+                transitionBuilder: (child, animation) => FadeTransition(
+                  opacity: animation,
+                  child: child,
+                ),
+                child: views[vm.index],
               ),
               bottomNavigationBar: BottomNavigationBar(
+                selectedItemColor: Colors.teal,
+                unselectedItemColor: Colors.grey,
+                elevation: 3,
                 currentIndex: vm.index,
                 items: const <BottomNavigationBarItem>[
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.unfold_more),
-                    label: 'Counter',
+                    icon: Icon(Icons.filter_vintage_sharp),
+                    label: 'Mandelbrot',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.wb_twilight),
+                    label: 'Synth',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.loyalty),
+                    label: 'Loyalty',
                   ),
                   BottomNavigationBarItem(
                     icon: Icon(Icons.calculate),
                     label: 'Calculator',
-                  )
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.unfold_more),
+                    label: 'Counter',
+                  ),
                 ],
                 onTap: (index) => vm.onSetPageIndex(index),
               ),

@@ -57,9 +57,13 @@ class CalculatorModel {
   }
 
   CalculatorModel clear() {
-    keys.clear();
-    screen = '';
-    result = '';
+    if (keys.isEmpty && screen.isEmpty) {
+      history.clear();
+    } else {
+      keys.clear();
+      screen = '';
+      result = '';
+    }
     return this;
   }
 
@@ -72,8 +76,8 @@ class CalculatorModel {
     return CalculatorModel.fromValues(
       history: [...history, newHistory],
       keys: [],
-      screen: '',
-      result: '',
+      screen: result,
+      result: ' ',
     );
   }
 

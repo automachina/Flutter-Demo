@@ -3,7 +3,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'package:test_drive/components/text.dart';
 import '/actions/calculator.dart';
-import '/components/keypad.dart';
+import '../components/calculator/keypad.dart';
 import '/models/app_state.dart';
 import '/models/calculator.dart';
 
@@ -15,45 +15,31 @@ class CalculatorPage extends StatelessWidget {
     return StoreConnector<AppState, _ViewModel>(
       converter: _ViewModel.fromStore,
       builder: (context, vm) => Column(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Expanded(
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.all(10),
-                    alignment: Alignment.bottomRight,
-                    decoration: BoxDecoration(
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  alignment: Alignment.bottomRight,
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.background,
                       borderRadius: const BorderRadius.only(
                         bottomLeft: Radius.circular(20),
                         bottomRight: Radius.circular(20),
-                      ),
-                    ),
-                    child: SingleChildScrollView(
-                      controller: ScrollController(initialScrollOffset: 100),
-                      child: RichText(
-                        textAlign: TextAlign.right,
-                        text: TextSpan(children: [
-                          ...vm.history
-                              .map(
-                                (i) => TextSpan(children: [
-                                  TextSpan(text: i.screen, style: const TextStyle(fontSize: 30)),
-                                  lineBreak(),
-                                  TextSpan(text: i.screen, style: const TextStyle(fontSize: 15)),
-                                  lineBreak(),
-                                ]),
-                              )
-                              .toList(),
-                          TextSpan(text: vm.screen, style: const TextStyle(fontSize: 40)),
-                          lineBreak(),
-                          TextSpan(text: vm.result, style: const TextStyle(fontSize: 25)),
-                        ]),
-                      ),
-                    ),
+                      )),
+                  child: RichText(
+                    textAlign: TextAlign.end,
+                    text: TextSpan(children: [
+                      TextSpan(text: vm.screen, style: const TextStyle(fontSize: 40)),
+                      lineBreak(),
+                      TextSpan(text: vm.result, style: const TextStyle(fontSize: 25)),
+                    ]),
                   ),
-                ),
+                )
               ],
             ),
           ),
@@ -94,11 +80,12 @@ class _ViewModel {
   });
 
   static _ViewModel fromStore(Store<AppState> store) {
+    final calculator = store.state.calculator;
     return _ViewModel(
-      screen: store.state.calculator.screen,
-      result: store.state.calculator.result,
-      keys: store.state.calculator.keys,
-      history: store.state.calculator.history,
+      screen: calculator.screen,
+      result: calculator.result,
+      keys: calculator.keys,
+      history: calculator.history,
       onKeyPressed: (key) => store.dispatch(InputCalculatorKeyAction(key)),
       onKeyRemoved: () => store.dispatch(RemoveCalculatorKeyAction()),
       onCalculate: () => store.dispatch(ExecuteCalculationAction()),

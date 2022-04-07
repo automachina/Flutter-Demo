@@ -11,7 +11,9 @@ String getScreen(AppState state) => state.calculator.screen;
 String getResult(AppState state) => state.calculator.result;
 
 inputKey({dynamic action}) sync* {
-  yield Call(print, args: ['inputKey: ${action.key}']);
+  if (action is InputCalculatorKeyAction) {
+    yield Call(print, args: ['inputKey: $action.key']);
+  }
   yield Put(UpdateScreenAction());
 }
 

@@ -1,3 +1,4 @@
+import '/models/loyalty.dart';
 import '/models/calculator.dart';
 import '/models/counter.dart';
 import '/models/page.dart';
@@ -8,12 +9,14 @@ class AppState {
   final ThemeModel theme;
   final PageModel page;
   final CalculatorModel calculator;
+  final LoyaltyModel loyalty;
 
   const AppState({
     required this.counter,
     required this.theme,
     required this.page,
     required this.calculator,
+    required this.loyalty,
   });
 
   factory AppState.initial() {
@@ -22,6 +25,7 @@ class AppState {
       theme: ThemeModel(),
       page: PageModel(),
       calculator: CalculatorModel(),
+      loyalty: LoyaltyModel(),
     );
   }
 }
